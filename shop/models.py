@@ -10,9 +10,13 @@ class Order(models.Model):
 class Product(models.Model):
     id = models.CharField(primary_key=True, max_length=20)
     name = models.CharField(max_length=150)
+    inventory_level = models.IntegerField(null=True)
+
+
+class InventoryItem(models.Model):
+    id = models.CharField(primary_key=True, max_length=20)
     sku = models.CharField(max_length=20)
     price = models.CharField(max_length=10)
-    inventory_level = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
