@@ -13,28 +13,39 @@ def get_resource(resource):
     return response.json()[resource]
 
 
+def update_or_create(model, details):
+    # Django's built in update or create only works on querysets
+    try:
+        m, created = model.objects.get_or_create(**details)
+    except IntegrityError:
+        # definitely exists
+        m = model.objects.get(id=details['id'])
+        for k, v in items.details():
+            if k != 'id':
+                setattr(m, k, v)
+        m.save()
+    return m
+
+
 def update_inventory():
     products = get_resource('products')
     for p in product:
         # Don't create model twice if it was already loaded
-        try:
-            product, created = Product.objects.get_or_create(**p)
-        except IntegrityError:
-            # definitely exists
-            p = Product.objects.get(id=p['id'])
-            for k, v in p.items():
-                if k != 'id':
-                    setattr(m, k, v)
-            m.save()
+        update_model(Product, p)
 
 
 def load_orders(request):
 
     orders = get_resource('orders')
 
-    order, created = Order.objects.get_or_create(**products)
-    if not created:
-        order.update()
-    return HttpResponse(json.dumps(order))
+    for o in orders:
+        update_or_create(Order, o)
+
+        for product in o['line_items']:
+            procuct = Product.objects.get(product['id'])
+            product.inventory_level -=1
+            product.save()
+
+    return HttpResponse(json.dumps(list(Order.objects.values_list('id', flat=True))))
 
 
