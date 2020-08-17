@@ -1,0 +1,10 @@
+Django==3.1
+django-extensions==3.0.5
+docker==4.3.0
+docker-compose==1.26.2
+flake8==3.8.3
+ipython==7.17.0
+isort==5.4.2
+psycopg2==2.8.5
+ShopifyAPI==8.0.2
+tox==3.19.0
