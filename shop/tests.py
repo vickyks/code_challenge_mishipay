@@ -10,6 +10,6 @@ class TestAPI(TestCase):
         self.client = Client()
 
     def test_api_orders(self):
-        response = self.client.get('/api/load/orders')
+        response = self.client.get('/api/load/order')
         return self.assertEqual(response.status_code, 200)
 

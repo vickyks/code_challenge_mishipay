@@ -1,9 +1,11 @@
 import requests
 from django.shortcuts import render
 from mishipay_app import settings
+from shop.models import Order, Product
+from django.db.utils import IntegrityError
 
 
-def get_resource(resource):
+def _get_resource(resource):
     username = settings.SHOPIFY_API_KEY
     password = settings.SHOPIFY_PASSWORD
     shop_name= settings.SHOPIFY_SHOP_NAME
@@ -27,16 +29,9 @@ def update_or_create(model, details):
     return m
 
 
-def update_inventory():
-    products = get_resource('products')
-    for p in product:
-        # Don't create model twice if it was already loaded
-        update_model(Product, p)
-
-
 def load_orders(request):
 
-    orders = get_resource('orders')
+    orders = _get_resource('orders')
 
     for o in orders:
         update_or_create(Order, o)
